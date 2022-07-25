@@ -87,7 +87,7 @@ const userLogin = async function (req,res){
 
     let password = data.password;
 
-    if(!isValid(userName)|| isValid(password) )
+    if (!isValid(userName) || !isValid(password)) 
      return res.status(400).send({status:false,msg:"Provide emailId and Password both"});
 
      let user = await userModel.findOne({ $and: [{ email: userName, password: password }] });
