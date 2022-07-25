@@ -79,7 +79,36 @@ const createUser = async function(req,res){
   }
 }
 
+   /////user Login /////
+const userLogin = async function (req,res){
+    let data = req.body;
+    
+    let userName = data.email;
+
+    let password = data.password;
+
+    if(!isValid(userName)|| isValid(password) )
+     return res.status(400).send({status:false,msg:"Provide emailId and Password both"});
+
+     let user = await userModel.findOne({ $and: [{ email: userName, password: password }] });
+
+     if(!user){
+        return res.status(400).send({status:false,msg:"EmailId or Password is Wrong"})
+     }
+
+     let token = jwt.sign({
+        userId: user._id.toString()
+    }, "functionup-radon",
+    {
+        expiresIn: "1h"
+    });
+
+    res.status(200).send({ status: true, msg: "success", userId:user._id ,token: token })
+
+
+}
 
 
 
 module.exports.createUser =  createUser
+module.exports.userLogin  = userLogin
